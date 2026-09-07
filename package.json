@@ -1,5 +1,5 @@
 {
-  "name": "lynx-node-vmd",
+  "name": "lynx-node-vdm",
   "version": "1.0.0",
   "description": "Modern real-time FinishLynx web scoreboard for local area networks (LAN)",
   "main": "server.js",
