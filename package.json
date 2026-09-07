@@ -1,0 +1,26 @@
+{
+  "name": "lynx-node-vmd",
+  "version": "1.0.0",
+  "description": "Modern real-time FinishLynx web scoreboard for local area networks (LAN)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "finishlynx",
+    "scoreboard",
+    "vdm",
+    "track-and-field",
+    "athletics",
+    "udp",
+    "websocket",
+    "node"
+  ],
+  "author": "Jan Rappe",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

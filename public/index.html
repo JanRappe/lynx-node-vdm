@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FinishLynx Stadium Video Display Module (VDM) - 16x4 LED Matrix Board Simulator (VDMPlaceNameTime.lss)">
+  <title>FinishLynx Video Display Module | 16x4 Stadium Board</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="stadium-ambient"></div>
+
+  <main class="display-stage">
+    <div class="vdm-bezel" id="vdm-bezel" aria-label="FinishLynx 16x4 Video Display Module">
+      <div class="vdm-matrix-screen" id="vdm-screen" role="region" aria-live="polite">
+        <!-- cells rendered dynamically by app.js -->
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+/* ==========================================================================
+   FinishLynx Video Display Module (VDM) - Stadium Scoreboard
+   ========================================================================== */
+
+:root {
+  --vdm-cols: 16;
+  --vdm-rows: 4;
+  --bezel-color: #0d1117;
+  --bezel-border: #1f2937;
+  --screen-bg: #202020;
+  --led-glow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #05070a;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.stadium-ambient {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #111827 0%, #030712 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.display-stage {
+  position: relative;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5vh 1.5vw;
+}
+
+.vdm-bezel {
+  background-color: var(--bezel-color);
+  border: 4px solid var(--bezel-border);
+  border-radius: 12px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.9),
+    inset 0 2px 4px rgba(255, 255, 255, 0.08),
+    0 0 0 1px rgba(0, 0, 0, 0.8);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Video Display Matrix */
+.vdm-matrix-screen {
+  position: relative;
+  background-color: var(--screen-bg);
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 2px;
+  border: 2px solid #111827;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+}
+
+/* LED Matrix Mesh Texture */
+.vdm-matrix-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* VDM Field / Cell Block */
+.vdm-field {
+  display: flex;
+  align-items: center;
+  padding: 0 1.2%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.vdm-field.align-left {
+  justify-content: flex-start;
+  text-align: left;
+}
+.vdm-field.align-center {
+  justify-content: center;
+  text-align: center;
+}
+.vdm-field.align-right {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.vdm-field.field-clock {
+  font-family: "Courier New", Courier, "SF Mono", monospace;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
