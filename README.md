@@ -6,7 +6,7 @@ Inspired by chrissabato's [lynx-node-scoreboard](https://github.com/chrissabato/
 
 Only works on local networks.
 
-### Node Server
+## Node Server
 + install [node.js](http://nodejs.org/)
   + add node to PATH (windows installer sometimes doesn't do this by default)
     + open cmd prompt as administrator
@@ -18,7 +18,7 @@ Only works on local networks.
     + CD c:\node
     + npm ci
     
-### FinishLynx Setup
+## FinishLynx Setup
 + setup scoreboard in FinishLynx
   + Script: any VDM.lss script 
   + Code Set: Single Byte
@@ -33,9 +33,9 @@ Only works on local networks.
   + Max: 6 (The max number of competitors in an event)
   + Include first name: checked
   
-### Run Server
+## Run Server
 + start the node server
   + npm start
 
-### Access Scoreboard
+## Access Scoreboard
 + Open a browser and enter [IP-Adress]:8050 (without the brackets) into the address bar
