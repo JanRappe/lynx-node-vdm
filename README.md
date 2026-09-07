@@ -6,8 +6,7 @@ Inspired by chrissabato's [lynx-node-scoreboard](https://github.com/chrissabato/
 
 Only works on local networks.
 
-### Node Setup
---------------------
+### Node Server
 + install [node.js](http://nodejs.org/)
   + add node to PATH (windows installer sometimes doesn't do this by default)
     + open cmd prompt as administrator
@@ -20,7 +19,6 @@ Only works on local networks.
     + npm ci
     
 ### FinishLynx Setup
---------------------
 + setup scoreboard in FinishLynx
   + Script: any VDM.lss script 
   + Code Set: Single Byte
@@ -36,10 +34,8 @@ Only works on local networks.
   + Include first name: checked
   
 ### Run Server
---------------------
 + start the node server
   + npm start
 
 ### Access Scoreboard
---------------------
 + Open a browser and enter [IP-Adress]:8050 (without the brackets) into the address bar
