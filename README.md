@@ -1,6 +1,10 @@
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/main/LICENSE)
+
 lynx-node-vdm
 ====================
-Node.js Web Scoreboard for FinishLynx that emulates a VDM (Visual Display Module) compatible with FinishLynx VDM.lss scoreboard scripts.
+
+
+A Node.js Web Scoreboard for FinishLynx that emulates a VDM (Visual Display Module) compatible with FinishLynx VDM.lss scoreboard scripts.
 
 Inspired by chrissabato's [lynx-node-scoreboard](https://github.com/chrissabato/lynx-node-scoreboard)
 
