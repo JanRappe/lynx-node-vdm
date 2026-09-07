@@ -15,9 +15,9 @@ Only works on local networks.
 + create a folder for you Node project (c:\node)
 + install dependencies
   + must be in the same directory as the node project
-  + from a command prompt
+  + from a command prompt, run:
     + CD c:\node
-    + npm install
+    + npm ci
     
 ### FinishLynx Setup
 --------------------
