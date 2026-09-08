@@ -28,7 +28,7 @@ Only works on local networks.
   + Code Set: Single Byte
   + Serial Port: Network (UDP)
   + Port: 43278 
-  + IP Address: IP-Address of the server (127.0.0.1 if on the same machine)
+  + IP Address: 255.255.255.255
   + Running Time: Auto
   + Results: Auto
   + Alway send place: checked
