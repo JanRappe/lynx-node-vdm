@@ -42,4 +42,4 @@ Only works on local networks.
   + npm start
 
 ## Access Scoreboard
-+ Open a browser and enter [IP-Adress]:8050 (without the brackets) into the address bar
++ Open a browser and enter http://localhost:8050 (Or the IP-Addres of the PC running the server) into the address bar
