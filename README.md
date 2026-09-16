@@ -26,7 +26,7 @@ Only works on local networks.
 + setup scoreboard in FinishLynx
   + Script: any VDM.lss script 
   + Code Set: Single Byte
-  + Serial Port: Network (UDP)
+  + Serial Port: Network (connect)
   + Port: 43278 
   + IP Address: 255.255.255.255
   + Running Time: Auto

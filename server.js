@@ -1,10 +1,10 @@
 const http = require('node:http');
-const dgram = require('node:dgram');
+const net = require('node:net');
 const fs = require('node:fs');
 const path = require('node:path');
 const os = require('node:os');
 const { WebSocketServer, WebSocket } = require('ws');
-const { VdmEngine, DatagramReassembler } = require('./src/vdmParser');
+const { VdmEngine } = require('./src/vdmParser');
 
 // Configuration
 const HTTP_PORT = parseInt(process.env.PORT, 10) || 8050;
@@ -15,24 +15,9 @@ const TIME_PORT = parseInt(process.env.TIME_PORT, 10) || 43279;
 // Instantiate VDM Engine
 const vdmEngine = new VdmEngine(16, 4);
 
-// Initialize default idle VDM frame
-vdmEngine.executeCommand('LayoutSetup=16,4');
-vdmEngine.executeCommand('LayoutBackColor=0x20,0x20,0x20');
-vdmEngine.executeCommand('FontFaceColor=White');
-vdmEngine.executeCommand('TextJustify=Center');
-vdmEngine.executeCommand('TextSetup=16');
-vdmEngine.executeCommand('FontBackColor=85,0,156');
-vdmEngine.executeCommand('TextDraw=FinishLynx Stadium');
-vdmEngine.executeCommand('TextSetup=16,3');
-vdmEngine.executeCommand('FontBackColor=0x20,0x20,0x20');
-vdmEngine.executeCommand('TextDraw=0.0');
-vdmEngine.flush();
 
-
-// Metrics
 const metrics = {
   resultsPackets: 0,
-  timePackets: 0,
   lastUpdate: new Date().toISOString()
 };
 
@@ -82,8 +67,7 @@ const server = http.createServer((req, res) => {
       lanAddresses: getLANAddresses(),
       ports: {
         http: HTTP_PORT,
-        resultsUdp: RESULTS_PORT,
-        timeUdp: TIME_PORT
+        resultsTcp: RESULTS_PORT
       },
       metrics,
       activeFrame: vdmEngine.activeFrame
@@ -173,17 +157,19 @@ const heartbeatInterval = setInterval(() => {
 if (heartbeatInterval.unref) heartbeatInterval.unref();
 
 // ---------------------------------------------------------------------------
-// FinishLynx UDP Listeners
+// FinishLynx TCP Listener
 // ---------------------------------------------------------------------------
-const udpResults = dgram.createSocket({ type: 'udp4', reuseAddr: true });
-const udpTime = dgram.createSocket({ type: 'udp4', reuseAddr: true });
+const tcpResults = net.createServer((socket) =>{
+    console.log("TCP Server: Client connected:", socket.remoteAddress);
+    socket.on('data', (data) => {
+        metrics.resultsPackets++;
+        processIncomingDatagram(data);
+        
+    });
+});
 
-// Datagram reassemblers for multi-packet UDP payloads (FinishLynx 536-byte chunks)
-const resultsAssembler = new DatagramReassembler();
-const timeAssembler = new DatagramReassembler();
 
 function processIncomingDatagram(msg) {
-  metrics.lastUpdate = new Date().toISOString();
   const text = typeof msg === 'string' ? msg : msg.toString('latin1');
 
   // If packet contains VDM command delimiters (\x12 and \x14), parse directly with VdmEngine
@@ -194,33 +180,14 @@ function processIncomingDatagram(msg) {
   }
 }
 
-// Port 8050 (Results)
-udpResults.on('message', (msg, rinfo) => {
-  metrics.resultsPackets++;
-  resultsAssembler.feed(msg, rinfo, (fullPayload) => {
-    processIncomingDatagram(fullPayload);
-  });
-});
-
-// Port 43279 (Clock)
-udpTime.on('message', (msg, rinfo) => {
-  metrics.timePackets++;
-  timeAssembler.feed(msg, rinfo, (fullPayload) => {
-    processIncomingDatagram(fullPayload);
-  });
-});
 
 // ---------------------------------------------------------------------------
 // Server Start
 // ---------------------------------------------------------------------------
 function startServer() {
-  udpResults.bind(RESULTS_PORT, () => {
-    console.log(`[UDP Results] Listening on port: ${RESULTS_PORT}`);
-  });
-
-  udpTime.bind(TIME_PORT, () => {
-    console.log(`[UDP Time]    Listening on port: ${TIME_PORT}`);
-  });
+    tcpResults.listen(RESULTS_PORT, HTTP_HOST, ()=> {
+        console.log(`[TCP Results] Listening on port ${RESULTS_PORT}`);
+    })
 
   server.listen(HTTP_PORT, HTTP_HOST, () => {
     const lanIPs = getLANAddresses();
@@ -234,9 +201,8 @@ function startServer() {
         console.log(`    ➜ Network: http://${ip}:${HTTP_PORT}/`);
       });
     }
-    console.log('\n  FinishLynx UDP Ports:');
-    console.log(`    ➜ Results: Port ${RESULTS_PORT} (VDMPlaceNameTime.lss)`);
-    console.log(`    ➜ Time:    Port ${TIME_PORT} (Running Clock)`);
+    console.log('\n  FinishLynx TCP Port:');
+    console.log(`    ➜ Results: Port ${RESULTS_PORT}`);
     console.log('========================================================\n');
   });
 }
@@ -244,10 +210,7 @@ function startServer() {
 function shutdown() {
   console.log('\nShutting down VDM server...');
   clearInterval(heartbeatInterval);
-  resultsAssembler.reset();
-  timeAssembler.reset();
-  udpResults.close();
-  udpTime.close();
+  tcpResults.close();
   wss.close();
   server.close(() => {
     console.log('Server stopped.');
@@ -257,17 +220,4 @@ function shutdown() {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-if (require.main === module) {
   startServer();
-}
-
-module.exports = {
-  server,
-  wss,
-  vdmEngine,
-  resultsAssembler,
-  timeAssembler,
-  processIncomingDatagram,
-  startServer,
-  shutdown
-};
