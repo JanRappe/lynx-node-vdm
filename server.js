@@ -215,6 +215,7 @@ function shutdown() {
   server.close(() => {
     console.log('Server stopped.');
   });
+  process.exit();
 }
 
 process.on('SIGINT', shutdown);
